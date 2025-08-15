@@ -1,8 +1,22 @@
 from fastapi import FastAPI, HTTPException
 from src.schemas import RunRequest, RunResponse
 from src.runner import run_backtest
+from datetime import datetime
 
 app = FastAPI(title="Backtrader Service")
+
+@app.get("/health", tags=["health"])
+def health_check():
+    """
+    Health check endpoint to verify service status.
+    Returns basic service information and status.
+    """
+    return {
+        "status": "healthy",
+        "service": "Backtrader Service",
+        "timestamp": datetime.utcnow().isoformat(),
+        "version": "1.0.0"
+    }
 
 @app.post("/run", response_model=RunResponse, tags=["backtest"])
 def run(req: RunRequest):
